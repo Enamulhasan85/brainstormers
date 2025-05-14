@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TaskForge.Application.Common.Model;
 using TaskForge.Application.DTOs;
@@ -9,6 +10,7 @@ using TaskForge.Application.Interfaces.Repositories.Common;
 using TaskForge.Application.Interfaces.Services;
 using TaskForge.Domain.Entities;
 using TaskForge.Domain.Enums;
+
 
 namespace TaskForge.Application.Services
 {
@@ -20,7 +22,8 @@ namespace TaskForge.Application.Services
             IEmailSender emailSender,
             IUnitOfWork unitOfWork,
             UserManager<IdentityUser> userManager,
-			ILinkGeneratorService linkGeneratorService
+			ILinkGeneratorService linkGeneratorService,
+			INotificationService notificationService
 			) : IProjectInvitationService
     {
         private readonly IProjectInvitationRepository _projectInvitationRepo = projectInvitationRepo;
@@ -31,8 +34,9 @@ namespace TaskForge.Application.Services
         private readonly UserManager<IdentityUser> _userManager = userManager;
         private readonly IEmailSender _emailSender = emailSender;
         private readonly ILinkGeneratorService _linkGeneratorService = linkGeneratorService;
+		private readonly INotificationService _notificationService = notificationService;
 
-        public async Task<ProjectInvitation?> GetByIdAsync(int invitationId)
+		public async Task<ProjectInvitation?> GetByIdAsync(int invitationId)
         {
             return await _projectInvitationRepo.GetByIdAsync(invitationId);
         }
@@ -121,6 +125,9 @@ namespace TaskForge.Application.Services
 
                 await _projectInvitationRepo.AddAsync(invitation);
                 await _unitOfWork.SaveChangesAsync();
+
+
+				await _notificationService.NotifyUserAsync(user.Id, "You have a new project invitation.");
 
 				var fullLink = _linkGeneratorService.GenerateInvitationLink("/ProjectInvitation");
 
