@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -16,6 +17,8 @@ using TaskForge.Infrastructure.Data;
 using TaskForge.Infrastructure.Repositories;
 using TaskForge.Infrastructure.Repositories.Common;
 using TaskForge.Infrastructure.Services;
+using TaskForge.WebUI.Hubs;
+using TaskForge.WebUI.SignalR;
 
 namespace TaskForge.WebUI;
 
@@ -78,10 +81,14 @@ internal static class Program
 
         // Configure email sender service (can be replaced with a real email sender)
         builder.Services.AddTransient<IEmailSender, RealEmailSender>();
+		builder.Services.AddSignalR()
+	           .AddHubOptions<NotificationHub>(options =>
+	           {
+		           options.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
+	           });
 
-
-        // Add Identity services for custom IdentityUser and IdentityRole
-        builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+		// Add Identity services for custom IdentityUser and IdentityRole
+		builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -152,6 +159,8 @@ internal static class Program
         builder.Services.AddScoped<IProjectMemberService, ProjectMemberService>();
         builder.Services.AddScoped<IProjectInvitationService, ProjectInvitationService>();
         builder.Services.AddScoped<ILinkGeneratorService, LinkGeneratorService>();
+		builder.Services.AddScoped<INotificationService, SignalRNotificationService>();
+		builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 		builder.Services.AddHttpContextAccessor();
 
 
@@ -178,7 +187,7 @@ internal static class Program
             app.UseHsts(); // Enforce HTTPS security
         }
 
-        app.UseHttpsRedirection();
+		app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
 
@@ -187,14 +196,16 @@ internal static class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapRazorPages(); // Add Razor Pages for Authentication UI
+		app.MapRazorPages(); // Add Razor Pages for Authentication UI
 
         // Configure default routing for MVC controllers
         app.MapControllerRoute(
             "default",
             "{controller=Home}/{action=Index}/{id?}");
 
-        using (var scope = app.Services.CreateScope())
+		app.MapHub<NotificationHub>("/notificationHub");
+
+		using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
             try

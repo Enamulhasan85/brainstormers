@@ -158,3 +158,15 @@
 		return confirm(message);
 	}
 </script>
+
+@section Scripts {
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const badge = document.getElementById("invitationBadge");
+			if (badge) {
+				badge.innerText = "";
+				badge.classList.add("d-none");
+			}
+		});
+	</script>
+}
