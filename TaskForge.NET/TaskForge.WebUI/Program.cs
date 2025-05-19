@@ -150,7 +150,8 @@ internal static class Program
         builder.Services.AddScoped<ITaskAttachmentRepository, TaskAttachmentRepository>();
         builder.Services.AddScoped<ITaskAssignmentRepository, TaskAssignmentRepository>();
         builder.Services.AddScoped<ITaskDependencyRepository, TaskDependencyRepository>();
-        builder.Services.AddScoped<IFileService, FileService>();
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+		builder.Services.AddScoped<IFileService, FileService>();
         builder.Services.AddScoped<ITaskSorter, TopologicalTaskSorter>();
         builder.Services.AddScoped<IDependentTaskStrategy, RecursiveDependentTaskStrategy>();
         builder.Services.AddScoped<IUserService, UserService>();

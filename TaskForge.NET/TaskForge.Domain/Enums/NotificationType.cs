@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 namespace TaskForge.Domain.Enums;
 public enum NotificationType
 {
-	ProjectInvitation,
-	TaskAssigned,
-	RemovedFromProject,
-	ProjectUpdated
+	ProjectInvitation = 0,
+	TaskAssigned = 1
 }

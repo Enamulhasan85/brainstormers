@@ -21,8 +21,10 @@ namespace TaskForge.Infrastructure.Data
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<TaskAssignment> TaskAssignments { get; set; }
         public DbSet<TaskDependency> TaskDependencies { get; set; }
+		public DbSet<Notification> Notifications { get; set; }
 
-        public override int SaveChanges()
+
+		public override int SaveChanges()
         {
             ConvertDateTimeToUtc();
             return base.SaveChanges();

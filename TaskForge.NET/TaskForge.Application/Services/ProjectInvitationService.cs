@@ -50,7 +50,8 @@ namespace TaskForge.Application.Services
 
             var (projectInvitationList, totalCount) = await _projectInvitationRepo.GetPaginatedListAsync(
                 predicate: pi => pi.InvitedUserProfileId == userProfileId,
-                includes: query => query.Include(pi => pi.Project),
+				orderBy: query => query.OrderByDescending(pi => pi.InvitationSentDate),
+				includes: query => query.Include(pi => pi.Project),
                 skip: (pageIndex - 1) * pageSize,
                 take: pageSize
             );
@@ -62,10 +63,11 @@ namespace TaskForge.Application.Services
         {
             var (projectInvitationList, totalCount) = await _projectInvitationRepo.GetPaginatedListAsync(
                 predicate: pi => pi.ProjectId == projectId,
-                includes: query => query
+				orderBy: query => query.OrderByDescending(pi => pi.InvitationSentDate),
+				includes: query => query
                     .Include(pi => pi.InvitedUserProfile)
                         .ThenInclude(pi => pi.User),
-                take: pageSize,
+				take: pageSize,
                 skip: (pageIndex - 1) * pageSize
             );
 
@@ -124,10 +126,26 @@ namespace TaskForge.Application.Services
                 };
 
                 await _projectInvitationRepo.AddAsync(invitation);
-                await _unitOfWork.SaveChangesAsync();
 
 
-				await _notificationService.NotifyUserAsync(user.Id, "You have a new project invitation.");
+
+				var notification = new Notification
+				{
+					UserProfileId = (int)userProfileId,
+					Title = "Project Invitation",
+					Message = $"You have been invited to join project \"{project.Title}\".",
+					Type = NotificationType.ProjectInvitation,
+					RelatedEntityId = project.Id, 
+					TargetUrl = $"/ProjectInvitation/Index", 
+					CreatedAt = DateTime.UtcNow,
+					IsRead = false
+				};
+
+				// Notify the user via SignalR (real-time)
+				await _notificationService.NotifyUserAsync(user.Id,notification);
+
+				await _notificationService.AddAsync(notification);
+
 
 				var fullLink = _linkGeneratorService.GenerateInvitationLink("/ProjectInvitation");
 
@@ -142,7 +160,10 @@ namespace TaskForge.Application.Services
 
                 await _emailSender.SendEmailAsync(invitedUserEmail, subject, body);
 
-                await transaction.CommitAsync();
+
+				await _unitOfWork.SaveChangesAsync();
+
+				await transaction.CommitAsync();
 
                 return ServiceResult.SuccessResult("Invitation sent successfully.");
             }
