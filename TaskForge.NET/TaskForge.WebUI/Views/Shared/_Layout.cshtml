@@ -41,12 +41,22 @@
 				<ul class="navbar-nav ms-auto">
 					@if (User.Identity != null && User.Identity.IsAuthenticated)
 					{
+						<li class="nav-item dropdown me-3">
+						<a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-bell"></i>
+							<span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+								0
+							</span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+							<li class="dropdown-header">Notifications</li>
+							<li><hr class="dropdown-divider"></li>
+							<li class="text-center text-muted">No new notifications</li>
+						</ul>
+						</li>
 						<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle position-relative" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 									@User.Identity.Name
-									<span id="navBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
-										0
-									</span>
 								</a>
 
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -63,7 +73,6 @@
 									@* <a class="dropdown-item" asp-controller="ProjectInvitation" asp-action="Index">My Invitations</a> *@
 										<a class="dropdown-item d-flex justify-content-between align-items-center" asp-controller="ProjectInvitation" asp-action="Index">
 											My Invitations
-											<span id="invitationBadge" class="badge bg-danger rounded-pill ms-2 d-none">0</span>
 										</a>
 
 								</li>
@@ -111,35 +120,142 @@
 <script src="~/lib/select2/js/select2.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+
 <script>
-		const connection = new signalR.HubConnectionBuilder()
-		.withUrl("/notificationHub", {
-			transport: signalR.HttpTransportType.WebSockets,
-			withCredentials: true // Important for auth
-		})
+	const connection = new signalR.HubConnectionBuilder()
+		.withUrl("/notificationHub")
 		.configureLogging(signalR.LogLevel.Information)
 		.build();
 
-			connection.on("ReceiveNotification", function (message) {
-			const navBadge = document.getElementById("navBadge");
-					const invitationBadge = document.getElementById("invitationBadge");
+	const list = document.getElementById('notificationList');
+	const badge = document.getElementById('notificationBadge');
 
-				[navBadge, invitationBadge].forEach(badge => {
-			if (badge) {
-				let count = parseInt(badge.innerText) || 0;
-				badge.innerText = count + 1;
-				badge.classList.remove("d-none");
+	function getTimeAgo(dateString) {
+		const now = new Date();
+		const then = new Date(dateString);
+		const diff = Math.floor((now - then) / 1000); // in seconds
+
+		if (diff < 60) return `${diff} seconds ago`;
+		if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+		if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+		return `${Math.floor(diff / 86400)} days ago`;
+	}
+
+	function renderNotificationItem(notification) {
+		const li = document.createElement('li');
+		li.className = 'px-2';
+
+		const timeAgo = getTimeAgo(notification.createdAt);
+
+		// Define icons by type (using Bootstrap Icons or emojis for simplicity)
+				const typeIconMap = {
+			0: '<i class="bi bi-person-plus-fill text-success fs-5"></i>',      // ProjectInvitation
+			1: '<i class="bi bi-check2-square text-primary fs-5"></i>',         // TaskAssigned
+			default: '<i class="bi bi-bell text-secondary fs-5"></i>'
+		};
+
+		const icon = typeIconMap[notification.type] || typeIconMap.Default;
+		console.log(notification);
+
+		li.innerHTML = `
+			<a class="dropdown-item rounded ${notification.isRead ? 'notification-read' : 'notification-unread'}"
+				href="${notification.targetUrl}"
+				data-id="${notification.id}">
+				<div class="d-flex align-items-start">
+					<div class="me-2">${icon}</div>
+					<div class="flex-grow-1">
+						<div class="fw-semibold">${notification.title}</div>
+						<small class="d-block">${notification.message}</small>
+						<small class="text-muted">${timeAgo}</small>
+					</div>
+				</div>
+			</a>
+		`;
+		document.getElementById('notificationList').appendChild(li); // Adjust this to your list's ID
+	}
+
+
+
+
+	// Load existing notifications
+	fetch('/Notification/GetUserNotifications')
+		.then(res => res.json())
+		.then(notifications => {
+			list.innerHTML = '<li class="dropdown-header">Notifications</li><li><hr class="dropdown-divider"></li>';
+			if (notifications.length === 0) {
+				list.innerHTML += `<li class="text-center text-muted">No notifications</li>`;
+			} else {
+				let unreadCount = 0;
+				notifications.forEach(notification => {
+					if (!notification.isRead) unreadCount++;
+					renderNotificationItem(notification);
+				});
+				if (unreadCount > 0) {
+					badge.textContent = unreadCount;
+					badge.classList.remove("d-none");
+				}
 			}
 		});
-		});
 
+	document.addEventListener('click', function (e) {
+		const item = e.target.closest('.dropdown-item');
+		if (item && item.hasAttribute('data-id')) {
+			e.preventDefault();
 
-	connection.start().then(function () {
-		console.log("SignalR Connected");
-	}).catch(function (err) {
-		return console.error(err.toString());
+			const notificationId = item.getAttribute('data-id');
+			const href = item.getAttribute('href');
+
+				fetch(`/Notification/MarkAsRead/${notificationId}`, { method: 'POST' })
+				.then(() => {
+					item.classList.remove('bg-light');
+					item.classList.add('bg-white');
+
+					window.location.href = href;
+				})
+				.catch((error) => {
+					console.error('MarkAsRead failed:', error);
+					window.location.href = href; 
+				});
+		}
 	});
+
+	// Real-time updates
+	connection.on("ReceiveNotification", function (notification) {
+		renderNotificationItem(notification);
+		let count = parseInt(badge.textContent || "0") + 1;
+		badge.textContent = count;
+		badge.classList.remove("d-none");
+	});
+
+	connection.start().then(() => {
+		console.log("SignalR Connected");
+	}).catch(err => console.error(err));
 </script>
+
+<style>
+	/* Unread notification styling */
+	.notification-unread {
+		background-color: #e8f0ff !important;
+		color: #202124 !important;
+		font-weight: 600;
+		border-left: 4px solid #0a66c2;
+		padding-left: 1rem;
+	}
+
+	/* Read notification styling */
+	.notification-read {
+		background-color: #ffffff !important;
+		color: #4b4f56 !important;
+		font-weight: 400;
+	}
+
+	/* Hover effect for any notification */
+	.dropdown-item:hover {
+		background-color: #d2e3fc !important;
+	}
+</style>
+
+
 
 @await RenderSectionAsync("Scripts", false)
 </body>

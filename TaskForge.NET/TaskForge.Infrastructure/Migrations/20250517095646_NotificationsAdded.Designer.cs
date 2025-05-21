@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskForge.Infrastructure.Data;
@@ -11,9 +12,11 @@ using TaskForge.Infrastructure.Data;
 namespace TaskForge.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250517095646_NotificationsAdded")]
+    partial class NotificationsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,8 +249,8 @@ namespace TaskForge.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("RelatedEntityId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("RelatedEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TargetUrl")
                         .HasColumnType("text");
@@ -265,12 +268,15 @@ namespace TaskForge.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserProfileId")
+                    b.Property<Guid>("UserProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("UserProfileId1")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("UserProfileId1");
 
                     b.ToTable("Notifications");
                 });
@@ -726,9 +732,7 @@ namespace TaskForge.Infrastructure.Migrations
                 {
                     b.HasOne("TaskForge.Domain.Entities.UserProfile", "UserProfile")
                         .WithMany()
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserProfileId1");
 
                     b.Navigation("UserProfile");
                 });

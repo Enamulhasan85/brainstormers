@@ -28,6 +28,7 @@ namespace TaskForge.Tests.Application.Services
 		private readonly Mock<IProjectRepository> _projectRepositoryMock;
 		private readonly Mock<IEmailSender> _emailSenderMock;
 		private readonly Mock<ILinkGeneratorService> _linkGeneratorServiceMock;
+		private readonly Mock<INotificationService> _notificationServiceMock;
 
 		public ProjectInvitationServiceTests()
 		{
@@ -39,6 +40,7 @@ namespace TaskForge.Tests.Application.Services
 			_emailSenderMock = new Mock<IEmailSender>();
 			_userManagerMock = CreateMockUserManager();
 			_linkGeneratorServiceMock = new Mock<ILinkGeneratorService>();
+			_notificationServiceMock = new Mock<INotificationService>();
 
 			_projectInvitationService = new ProjectInvitationService(
 				_projectInvitationRepositoryMock.Object,
@@ -48,7 +50,8 @@ namespace TaskForge.Tests.Application.Services
 				_emailSenderMock.Object,
 				_unitOfWorkMock.Object,
 				_userManagerMock.Object,
-				_linkGeneratorServiceMock.Object
+				_linkGeneratorServiceMock.Object,
+                _notificationServiceMock.Object
 			);
 
 			_transactionMock = new Mock<IDbContextTransaction>();
