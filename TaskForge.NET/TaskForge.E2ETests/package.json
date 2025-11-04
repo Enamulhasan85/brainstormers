@@ -1,0 +1,32 @@
+{
+  "name": "taskforge-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for TaskForge.NET using Cypress",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox",
+    "cy:run:edge": "cypress run --browser edge",
+    "test": "cypress run",
+    "test:headed": "cypress run --headed",
+    "test:auth": "cypress run --spec 'cypress/e2e/auth/**/*.cy.js'",
+    "test:projects": "cypress run --spec 'cypress/e2e/projects/**/*.cy.js'",
+    "test:tasks": "cypress run --spec 'cypress/e2e/tasks/**/*.cy.js'"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "testing",
+    "taskforge"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "cypress": "^15.5.0",
+    "cypress-file-upload": "^5.0.8",
+    "dotenv": "^16.4.5"
+  }
+}

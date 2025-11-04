@@ -1,0 +1,56 @@
+{
+  "sampleTasks": [
+    {
+      "title": "Design database schema",
+      "description": "Create ERD and define all tables, relationships, and indexes",
+      "priority": 3,
+      "status": 0,
+      "startDate": "2025-11-05T09:00",
+      "dueDate": "2025-11-10T17:00"
+    },
+    {
+      "title": "Implement authentication system",
+      "description": "Set up ASP.NET Identity with role-based access control",
+      "priority": 3,
+      "status": 1,
+      "startDate": "2025-11-06T09:00",
+      "dueDate": "2025-11-12T17:00"
+    },
+    {
+      "title": "Create API documentation",
+      "description": "Document all REST API endpoints using Swagger/OpenAPI",
+      "priority": 1,
+      "status": 0,
+      "startDate": "2025-11-15T09:00",
+      "dueDate": "2025-11-20T17:00"
+    },
+    {
+      "title": "Write unit tests",
+      "description": "Achieve 80% code coverage with comprehensive unit tests",
+      "priority": 2,
+      "status": 0,
+      "startDate": "2025-11-08T09:00",
+      "dueDate": "2025-11-25T17:00"
+    },
+    {
+      "title": "Deploy to staging environment",
+      "description": "Configure CI/CD pipeline and deploy application to staging",
+      "priority": 2,
+      "status": 0,
+      "startDate": "2025-11-20T09:00",
+      "dueDate": "2025-11-22T17:00"
+    }
+  ],
+  "taskPriorities": [
+    { "value": 0, "label": "Low" },
+    { "value": 1, "label": "Medium" },
+    { "value": 2, "label": "High" },
+    { "value": 3, "label": "Critical" }
+  ],
+  "taskStatuses": [
+    { "value": 0, "label": "To Do" },
+    { "value": 1, "label": "In Progress" },
+    { "value": 2, "label": "In Review" },
+    { "value": 3, "label": "Done" }
+  ]
+}

@@ -19,8 +19,10 @@ namespace TaskForge.Application.Services
 			using var client = new SmtpClient(_settings.Host)
 			{
 				Port = _settings.Port,
+				UseDefaultCredentials = false,
 				Credentials = new NetworkCredential(_settings.Username, _settings.Password),
 				EnableSsl = true,
+				DeliveryMethod = SmtpDeliveryMethod.Network,
 			};
 
 			using var mail = new MailMessage(_settings.Username, email, subject, htmlMessage)

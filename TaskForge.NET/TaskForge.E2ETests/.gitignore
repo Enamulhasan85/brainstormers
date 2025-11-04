@@ -1,0 +1,26 @@
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Test results
+results/
+reports/
+mochawesome-report/
+
+# Environment
+.env
+.env.local

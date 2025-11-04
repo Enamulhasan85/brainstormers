@@ -1,0 +1,32 @@
+{
+  "testUser": {
+    "email": "testuser@example.com",
+    "password": "Password123!",
+    "fullName": "Test User",
+    "role": "User"
+  },
+  "adminUser": {
+    "email": "admin@taskforge.com",
+    "password": "Admin123!",
+    "fullName": "Admin User",
+    "role": "Admin"
+  },
+  "operatorUser": {
+    "email": "operator@taskforge.com",
+    "password": "Operator123!",
+    "fullName": "Operator User",
+    "role": "Operator"
+  },
+  "newUsers": [
+    {
+      "email": "newuser1@example.com",
+      "password": "NewUser123!",
+      "fullName": "New User One"
+    },
+    {
+      "email": "newuser2@example.com",
+      "password": "NewUser123!",
+      "fullName": "New User Two"
+    }
+  ]
+}

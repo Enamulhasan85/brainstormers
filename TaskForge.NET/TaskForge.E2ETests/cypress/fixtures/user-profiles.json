@@ -1,0 +1,24 @@
+{
+  "sampleProfiles": [
+    {
+      "fullName": "John Doe",
+      "phoneNumber": "+1234567890",
+      "professionalSummary": "Experienced software engineer with 10+ years in full-stack development",
+      "location": "San Francisco, CA",
+      "jobTitle": "Senior Software Engineer",
+      "company": "Tech Corp",
+      "linkedInProfile": "https://linkedin.com/in/johndoe",
+      "websiteUrl": "https://johndoe.dev"
+    },
+    {
+      "fullName": "Jane Smith",
+      "phoneNumber": "+0987654321",
+      "professionalSummary": "Product manager passionate about building user-centric solutions",
+      "location": "New York, NY",
+      "jobTitle": "Product Manager",
+      "company": "Innovation Labs",
+      "linkedInProfile": "https://linkedin.com/in/janesmith",
+      "websiteUrl": "https://janesmith.com"
+    }
+  ]
+}
