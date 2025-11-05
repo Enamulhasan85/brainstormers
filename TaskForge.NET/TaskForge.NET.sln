@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskForge.Application", "TaskForge.Application\TaskForge.Application.csproj", "{C7DDB652-48CE-4A96-94C0-CDB114E5A7C5}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskForge.WebUI", "TaskForge.WebUI\TaskForge.WebUI.csproj", "{20BD8EC1-AA87-4638-A832-5932EA7D6B42}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskForge.Tests", "TaskForge.Tests\TaskForge.Tests.csproj", "{363FFEBB-16CC-4B7A-9008-A1441168DB5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskForge.NUnitPlayTests", "TaskForge.NUnitPlayTests\TaskForge.NUnitPlayTests.csproj", "{5C3F8C07-021B-49F8-9D2B-F1BA2B1D050B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskForge.XUnitTests", "TaskForge.XUnitTests\TaskForge.XUnitTests.csproj", "{49B2747F-60CA-4D61-A7CD-BF425B57631E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,8 +43,19 @@ Global
 		{363FFEBB-16CC-4B7A-9008-A1441168DB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{363FFEBB-16CC-4B7A-9008-A1441168DB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{363FFEBB-16CC-4B7A-9008-A1441168DB5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3F8C07-021B-49F8-9D2B-F1BA2B1D050B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3F8C07-021B-49F8-9D2B-F1BA2B1D050B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3F8C07-021B-49F8-9D2B-F1BA2B1D050B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3F8C07-021B-49F8-9D2B-F1BA2B1D050B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B2747F-60CA-4D61-A7CD-BF425B57631E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B2747F-60CA-4D61-A7CD-BF425B57631E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B2747F-60CA-4D61-A7CD-BF425B57631E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B2747F-60CA-4D61-A7CD-BF425B57631E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {878F7F94-D0D1-43BA-A952-B4BFF1260A4F}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <Playwright>
+    <BrowserName>chromium</BrowserName>
+    <LaunchOptions>
+      <Headless>false</Headless>
+      <SlowMo>1000</SlowMo>
+    </LaunchOptions>
+    <ContextOptions>
+      <BaseURL>https://localhost:7034</BaseURL>
+      <IgnoreHTTPSErrors>true</IgnoreHTTPSErrors>
+      <ViewportSize>
+        <Width>1920</Width>
+        <Height>1080</Height>
+      </ViewportSize>
+    </ContextOptions>
+    <ExpectTimeout>30000</ExpectTimeout>
+  </Playwright>
+</RunSettings>
